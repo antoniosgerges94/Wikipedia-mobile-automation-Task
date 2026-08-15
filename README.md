@@ -1,16 +1,20 @@
 # Wikipedia Mobile Automation
 
+[![Java and Cucumber validation](https://github.com/antoniosgerges94/Wikipedia-mobile-automation-Task/actions/workflows/ci.yml/badge.svg)](https://github.com/antoniosgerges94/Wikipedia-mobile-automation-Task/actions/workflows/ci.yml)
+
 Professional Java/Appium/Cucumber automation for the Wikipedia mobile application's reading-list workflow. Android is the executable primary implementation; the driver, configuration, locators, and base layer provide a non-breaking iOS extension point.
+
+See [`ASSESSMENT_CHECKLIST.md`](ASSESSMENT_CHECKLIST.md) for a requirement-to-implementation matrix and [`LOCATOR_EVIDENCE.md`](LOCATOR_EVIDENCE.md) for runtime/source locator evidence.
 
 ## Assessment coverage
 
 ### Main scenario (`@smoke`)
 1. Launch Wikipedia and complete onboarding when shown.
 2. Search for **Artificial Intelligence**.
-3. open the exact result and validate article-page structure (not merely title text).
+3. Open the exact result and validate article-page structure (not merely title text).
 4. Save it, invoke the application's **Add to list** action, and create **AI Reading List**.
-5. Navigate through **Saved → Collections**, search for and open the list.
-6. Assert the article is visible, remove it through the real selection UI, confirm removal, and assert zero visible occurrences.
+5. Navigate to **Saved**, handle the current direct-list UI (with a supported Collections fallback), then filter for and open the list.
+6. Assert the article is visible, long-press it, remove it through the article-actions bottom sheet, and assert zero visible occurrences.
 
 ### Duplicate protection (`@duplicate`)
 The test creates the list, opens the saved article from that list, uses the article's saved-state menu, selects **Add to another reading list**, and selects the same list. It requires the AUT's **already contains** confirmation, returns to the actual list UI, and asserts exactly one rendered article occurrence. No framework-only flag substitutes for the UI count.
@@ -20,6 +24,7 @@ The test creates the list, opens the saved article from that list, uses the arti
 - Java 21
 - Maven
 - Appium Java Client 10
+- Appium Server 3.5.0 and UiAutomator2 7.6.2 in the validated Android environment
 - UiAutomator2 (Android), XCUITest capability construction (iOS extension)
 - Cucumber 7 / Gherkin Scenario Outlines
 - JUnit Platform
@@ -29,7 +34,7 @@ The test creates the list, opens the saved article from that list, uses the arti
 
 1. Install JDK 21 and set `JAVA_HOME`; verify with `java -version`.
 2. Install Maven; verify with `mvn -version`.
-3. Install Android Studio/SDK, Platform Tools, and an Android 17 emulator image.
+3. Install Android Studio/SDK, Platform Tools, and an Android 16 / API 36 emulator image (the validated profile is Pixel 7 API 36).
 4. Add `%ANDROID_HOME%\platform-tools` and `%ANDROID_HOME%\emulator` to `PATH`.
 5. Install Node.js LTS, Appium 2/3, and UiAutomator2:
    ```powershell
@@ -39,6 +44,18 @@ The test creates the list, opens the saved article from that list, uses the arti
    ```
 6. Install the official Wikipedia app (`org.wikipedia`) from Google Play on the emulator, or set `app.path` to a trusted APK.
 7. Optional Allure CLI: `scoop install allure` (or install from the Allure releases page).
+
+Validated target environment:
+
+```text
+Wikipedia: org.wikipedia, versionName 50600-r-2026-07-28
+Android: 16 (API 36)
+Emulator: Pixel 7 API 36 / emulator-5554
+Appium: 3.5.0
+UiAutomator2: 7.6.2
+Java: 21.0.10
+Maven: 3.9.15
+```
 
 ## Emulator and Appium startup
 
@@ -129,7 +146,7 @@ Never run more concurrent scenarios than configured devices. Driver state is `Th
 - **Android:** page workflow and source-supported locators are implemented for UiAutomator2.
 - **iOS bonus architecture:** XCUITest capabilities, iOS configuration, cross-platform text/accessibility locator builders, and driver isolation are present. iOS page-specific selectors and workflow are intentionally not claimed as validated because no iOS simulator/device hierarchy was supplied. Add them only from an actual iOS Appium page source; Android compilation and behavior remain isolated.
 
-See `LOCATOR_EVIDENCE.md` for the exact official Android source commit and evidence used. A final live run against the installed Play Store build remains mandatory because upstream source inspection cannot prove the hierarchy of an unknown installed APK.
+See `LOCATOR_EVIDENCE.md` for the exact official Android source commit and runtime evidence used. On 2026-08-16, `@smoke`, `@duplicate`, and the complete `mvn clean test` suite all finished with `BUILD SUCCESS` against the validated Android environment above. Evaluators should still rerun the suite against their installed AUT because Play Store builds and first-run prompts can change.
 
 ## Project structure
 

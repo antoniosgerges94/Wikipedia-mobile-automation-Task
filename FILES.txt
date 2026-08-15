@@ -1,4 +1,6 @@
+./.github/workflows/ci.yml
 ./.gitignore
+./ASSESSMENT_CHECKLIST.md
 ./AUDIT_REPORT.md
 ./FILES.txt
 ./LOCATOR_EVIDENCE.md

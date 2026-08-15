@@ -1,0 +1,5 @@
+[
+ {"name":"Assertion failure","matchedStatuses":["failed"],"messageRegex":".*(AssertionError|Expected|absent|visible|exists).*"},
+ {"name":"Synchronization or locator failure","matchedStatuses":["failed","broken"],"messageRegex":".*(TimeoutException|NoSuchElement|not actionable|Timed out).*"},
+ {"name":"Appium or device infrastructure","matchedStatuses":["broken"],"messageRegex":".*(session creation|SessionNotCreated|Connection refused|device|UDID|Appium).*"}
+]
